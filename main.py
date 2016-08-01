@@ -91,7 +91,7 @@ def generate_html_content_string_for_dropbox(html_title, plist_dropbox_url, plis
     return HTML_CONTENT.format(key_title=html_title, key_plist_url=plist_dropbox_url, key_plist_ios8_url=plist_ios8_dropbox_url)
 
 
-def upload_and_share_file(dbx: dropbox.Dropbox, dropbox_path, file_or_text_content):
+def upload_and_share_file(dbx, dropbox_path, file_or_text_content):
     print('Uploading file to dropbox location: ' + dropbox_path)
     dbx.files_upload(file_or_text_content, dropbox_path)
     print('File uploaded')
