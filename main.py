@@ -9,50 +9,50 @@ import os
 import plist_utils
 
 
-PLIST_CONTENT_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\
-<plist version="1.0">\
-<dict>\
-    <key>items</key>\
-    <array>\
-        <dict>\
-            <key>assets</key>\
-            <array>\
-                <dict>\
-                    <key>kind</key>\
-                    <string>software-package</string>\
-                    <key>url</key>\
-                    <string>{key_url}</string>\
-                </dict>\
-            </array>\
-            <key>metadata</key>\
-            <dict>\
-                <key>bundle-identifier</key>\
-                <string>{key_bundle_identifier}</string>\
-                <key>bundle-version</key>\
-                <string>{key_bundle_version}</string>\
-                <key>kind</key>\
-                <string>software</string>\
-                <key>title</key>\
-                <string>{key_title}</string>\
-            </dict>\
-        </dict>\
-    </array>\
-</dict>\
+PLIST_CONTENT_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n\
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n\
+<plist version="1.0">\n\
+<dict>\n\
+    <key>items</key>\n\
+    <array>\n\
+        <dict>\n\
+            <key>assets</key>\n\
+            <array>\n\
+                <dict>\n\
+                    <key>kind</key>\n\
+                    <string>software-package</string>\n\
+                    <key>url</key>\n\
+                    <string>{key_url}</string>\n\
+                </dict>\n\
+            </array>\n\
+            <key>metadata</key>\n\
+            <dict>\n\
+                <key>bundle-identifier</key>\n\
+                <string>{key_bundle_identifier}</string>\n\
+                <key>bundle-version</key>\n\
+                <string>{key_bundle_version}</string>\n\
+                <key>kind</key>\n\
+                <string>software</string>\n\
+                <key>title</key>\n\
+                <string>{key_title}</string>\n\
+            </dict>\n\
+        </dict>\n\
+    </array>\n\
+</dict>\n\
 </plist>'
 
 
-HTML_CONTENT = '<!DOCTYPE HTML>\
-<html>\
-    <head>\
-        <title>{key_title}</title>\
-        <meta charset="UTF-8">\
-    </head>\
-    <body>\
-<h1>{key_title}</h1>\
-<h2><a href="itms-services://?action=download-manifest&url={key_plist_url}">Install</a></h2>\
-<h2><a href="itms-services://?action=download-manifest&url={key_plist_ios8_url}">iOS8-Install</a></h2>\
-    </body>\
+HTML_CONTENT = '<!DOCTYPE HTML>\n\
+<html>\n\
+    <head>\n\
+        <title>{key_title}</title>\n\
+        <meta charset="UTF-8">\n\
+    </head>\n\
+    <body>\n\
+<h1>{key_title}</h1>\n\
+<h2><a href="itms-services://?action=download-manifest&url={key_plist_url}">Install</a></h2>\n\
+<h2><a href="itms-services://?action=download-manifest&url={key_plist_ios8_url}">iOS8-Install</a></h2>\n\
+    </body>\n\
 </html>'
 
 
