@@ -1,13 +1,12 @@
 import configparser
-import zipfile
-
-import time
-
-import dropbox
 import fnmatch
 import os
-import plist_utils
+import time
+import zipfile
 
+import dropbox
+
+import plist_utils
 
 PLIST_CONTENT_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n\
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n\
@@ -44,15 +43,31 @@ PLIST_CONTENT_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n\
 
 HTML_CONTENT = '<!DOCTYPE HTML>\n\
 <html>\n\
-    <head>\n\
-        <title>{key_title}</title>\n\
-        <meta charset="UTF-8">\n\
-    </head>\n\
-    <body>\n\
-<h1>{key_title}</h1>\n\
-<h2><a href="itms-services://?action=download-manifest&url={key_plist_url}">Install</a></h2>\n\
-<h2><a href="itms-services://?action=download-manifest&url={key_plist_ios8_url}">iOS8-Install</a></h2>\n\
-    </body>\n\
+<head>\n\
+    <title>{key_title}</title>\n\
+    <meta charset="UTF-8">\n\
+    <style>\n\
+        .title {{\n\
+            font-size: 6rem;\n\
+        }}\n\
+        .link {{\n\
+            font-size: 6rem;\n\
+            border: 1px solid #333;\n\
+            display: inline-block;\n\
+            padding: 5px 15px;\n\
+            margin: 1rem;\n\
+            text-decoration: none; /* Remove underline */\n\
+            color: #000; /* Text color */\n\
+        }}\n\
+    </style>\n\
+</head>\n\
+<body>\n\
+    <div align="center">\n\
+        <h1 class="title">{key_title}</h1>\n\
+        <p><a href="itms-services://?action=download-manifest&url={key_plist_url}" class="link">Install</a></p>\n\
+        <p><a href="itms-services://?action=download-manifest&url={key_plist_ios8_url}" class="link">iOS8-Install</a></p>\n\
+    </div>\n\
+</body>\n\
 </html>'
 
 
