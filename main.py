@@ -1,12 +1,18 @@
 import configparser
 import fnmatch
+import getopt
 import os
+import sys
 import time
 import zipfile
 
 import dropbox
 
 import plist_utils
+
+HELP_MESSAGE = 'Usage: main.py -i <input_file> -o <output_dropbox_dir>'
+HELP_MESSAGE_FULL = 'Usage: main.py -i <input_file> -o <output_dropbox_dir>\n\
+    Example: main.py -i /Users/user/AdHocFile.ipa -o /AdHocs/TestAdHoc'
 
 PLIST_CONTENT_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n\
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n\
@@ -125,8 +131,7 @@ def upload_and_share_file(dbx, dropbox_path, file_or_text_content):
     return shared_url_str
 
 
-def main():
-
+def upload_files(ipa_local_path, output_dropbox_dir):
     appToken = None
     config_filename = 'deploy_config.ini'
     try:
@@ -135,12 +140,9 @@ def main():
         appToken = config['Dropbox authorization']['AppToken']
     except Exception:
         pass
-
     if appToken is None:
         print('Error parsing configuration file ' + config_filename)
         exit(1)
-
-    ipa_local_path = input('Enter full path to AdHoc ipa file: ')
 
     base_filename = os.path.basename(ipa_local_path)
     base_filename, ipa_extension = os.path.splitext(base_filename)
@@ -148,27 +150,27 @@ def main():
         print('Extension of file is not .ipa: ', ipa_extension)
         exit(1)
 
-    dropbox_upload_dir = input('Enter Dropbox directory for all files (for example "/AdHocs/2016-07-18"): ')
-
     dbx = dropbox.Dropbox(appToken)
     try:
         with open(ipa_local_path, mode='rb') as f:
-            ipa_dropbox_path = os.path.join(dropbox_upload_dir, base_filename + '.ipa')
+            ipa_dropbox_path = os.path.join(output_dropbox_dir, base_filename + '.ipa')
             ipa_dropbox_url = upload_and_share_file(dbx, ipa_dropbox_path, f)
 
-            plist_dropbox_path = os.path.join(dropbox_upload_dir, base_filename + '.plist')
+            plist_dropbox_path = os.path.join(output_dropbox_dir, base_filename + '.plist')
             plist_content = generate_plist_content_string_for_dropbox(ipa_local_path, ipa_dropbox_url)
             plist_dropbox_url = upload_and_share_file(dbx, plist_dropbox_path, plist_content)
 
             cur_date_string = time.strftime("%Y-%m-%d")
 
-            plist_ios8_dropbox_path = os.path.join(dropbox_upload_dir, base_filename + '-ios8.plist')
+            plist_ios8_dropbox_path = os.path.join(output_dropbox_dir, base_filename + '-ios8.plist')
             ios8_suffix = 'dummy-' + cur_date_string
-            plist_ios8_content = generate_plist_content_string_for_dropbox(ipa_local_path, ipa_dropbox_url, ios8_suffix=ios8_suffix)
+            plist_ios8_content = generate_plist_content_string_for_dropbox(ipa_local_path, ipa_dropbox_url,
+                                                                           ios8_suffix=ios8_suffix)
             plist_ios8_dropbox_url = upload_and_share_file(dbx, plist_ios8_dropbox_path, plist_ios8_content)
 
-            html_dropbox_path = os.path.join(dropbox_upload_dir, base_filename + '.html')
-            html_content = generate_html_content_string_for_dropbox('Pragmania-' + cur_date_string, plist_dropbox_url, plist_ios8_dropbox_url)
+            html_dropbox_path = os.path.join(output_dropbox_dir, base_filename + '.html')
+            html_content = generate_html_content_string_for_dropbox('Pragmania-' + cur_date_string, plist_dropbox_url,
+                                                                    plist_ios8_dropbox_url)
             html_dropbox_url = upload_and_share_file(dbx, html_dropbox_path, html_content)
 
             print('All files uploaded')
@@ -176,6 +178,34 @@ def main():
     except Exception as err:
         print("Failed to upload file: ", err)
         exit(1)
+
+
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hi:o:")
+    except getopt.GetoptError:
+        print(HELP_MESSAGE)
+        sys.exit(2)
+
+    ipa_local_path = None
+    output_dropbox_dir = None
+    for opt, arg in opts:
+        if opt == '-h':
+            print(HELP_MESSAGE_FULL)
+            sys.exit()
+
+        if opt == "-i":
+            ipa_local_path = arg
+            continue
+
+        if opt == "-o":
+            output_dropbox_dir = arg
+
+    if ipa_local_path is None or output_dropbox_dir is None:
+        print(HELP_MESSAGE)
+        sys.exit(2)
+
+    upload_files(ipa_local_path, output_dropbox_dir)
 
 
 if __name__ == '__main__':
