@@ -46,36 +46,9 @@ PLIST_CONTENT_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n\
 </dict>\n\
 </plist>'
 
+DOWNLOAD_LINK_TEMPLATE_IOS = "itms-services://?action=download-manifest&url={key_plist_url}"
 
-HTML_CONTENT = '<!DOCTYPE HTML>\n\
-<html>\n\
-<head>\n\
-    <title>{key_title}</title>\n\
-    <meta charset="UTF-8">\n\
-    <style>\n\
-        .title {{\n\
-            font-size: 6rem;\n\
-        }}\n\
-        .link {{\n\
-            font-size: 6rem;\n\
-            border: 1px solid #333;\n\
-            display: inline-block;\n\
-            padding: 5px 15px;\n\
-            margin: 1rem;\n\
-            text-decoration: none; /* Remove underline */\n\
-            color: #000; /* Text color */\n\
-        }}\n\
-    </style>\n\
-</head>\n\
-<body>\n\
-    <div align="center">\n\
-        <h1 class="title">{key_title}</h1>\n\
-        <p><a href="itms-services://?action=download-manifest&url={key_plist_url}" class="link">Install</a></p>\n\
-        <p><a href="itms-services://?action=download-manifest&url={key_plist_ios8_url}" class="link">iOS8-Install</a></p>\n\
-    </div>\n\
-</body>\n\
-</html>'
-
+DOWNLOAD_LINK_TEMPLATE_IOS_8 = "itms-services://?action=download-manifest&url={key_plist_ios8_url}"
 
 def analyse_ipa(ipa_file):
     with zipfile.ZipFile(ipa_file, "r") as ipa:
@@ -106,10 +79,6 @@ def generate_plist_content_string_for_dropbox(ipa_file_path, ipa_url, ios8_suffi
     bundle_identifier = ipa_info["CFBundleIdentifier"]
 
     return PLIST_CONTENT_TEMPLATE.format(key_url=ipa_url, key_bundle_identifier=bundle_identifier, key_bundle_version=bundle_version, key_title=app_name)
-
-
-def generate_html_content_string_for_dropbox(html_title, plist_dropbox_url, plist_ios8_dropbox_url):
-    return HTML_CONTENT.format(key_title=html_title, key_plist_url=plist_dropbox_url, key_plist_ios8_url=plist_ios8_dropbox_url)
 
 
 def upload_and_share_file(dbx, dropbox_path, file_or_text_content):
@@ -168,13 +137,13 @@ def upload_files(ipa_local_path, output_dropbox_dir):
                                                                            ios8_suffix=ios8_suffix)
             plist_ios8_dropbox_url = upload_and_share_file(dbx, plist_ios8_dropbox_path, plist_ios8_content)
 
-            html_dropbox_path = os.path.join(output_dropbox_dir, base_filename + '.html')
-            html_content = generate_html_content_string_for_dropbox('Pragmania-' + cur_date_string, plist_dropbox_url,
-                                                                    plist_ios8_dropbox_url)
-            html_dropbox_url = upload_and_share_file(dbx, html_dropbox_path, html_content)
+            download_link_ios = DOWNLOAD_LINK_TEMPLATE_IOS.format(key_plist_url=plist_dropbox_url)
+            download_link_ios8 = DOWNLOAD_LINK_TEMPLATE_IOS_8.format(key_plist_ios8_url=plist_ios8_dropbox_url)
 
-            print('All files uploaded')
-            print('Download url: ' + html_dropbox_url)
+            print('\nAll files uploaded!')
+            print('iOS 9-10 download url: ' + download_link_ios)
+            print('iOS 8 download url: ' + download_link_ios8)
+            print('Send links above to iphone via email and open them. Installation should start automatically')
     except Exception as err:
         print("Failed to upload file: ", err)
         exit(1)
