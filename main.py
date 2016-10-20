@@ -143,7 +143,7 @@ def upload_files(ipa_local_path, output_dropbox_dir):
             print('\nAll files uploaded!')
             print('iOS 9-10 download url: ' + download_link_ios)
             print('iOS 8 download url: ' + download_link_ios8)
-            print('Send links above to iphone via email and open them. Installation should start automatically')
+            print('Send links above via email to iOS devices. Tap on links on iOS devices. Installation should start automatically')
     except Exception as err:
         print("Failed to upload file: ", err)
         exit(1)
