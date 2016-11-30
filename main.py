@@ -78,7 +78,7 @@ def generate_plist_content_string_for_dropbox(ipa_file_path, ipa_url, ios8_suffi
     bundle_version = ipa_info["CFBundleVersion"]
     bundle_identifier = ipa_info["CFBundleIdentifier"]
 
-    return PLIST_CONTENT_TEMPLATE.format(key_url=ipa_url, key_bundle_identifier=bundle_identifier, key_bundle_version=bundle_version, key_title=app_name)
+    return PLIST_CONTENT_TEMPLATE.format(key_url=ipa_url, key_bundle_identifier=bundle_identifier, key_bundle_version=bundle_version, key_title=app_name).encode('utf-8')
 
 
 def upload_and_share_file(dbx, dropbox_path, file_or_text_content):
@@ -100,7 +100,7 @@ def upload_and_share_file(dbx, dropbox_path, file_or_text_content):
     return shared_url_str
 
 
-def upload_files(ipa_local_path, output_dropbox_dir):
+def upload_ipa_and_plist_files(ipa_local_path, output_dropbox_dir):
     appToken = None
     config_filename = 'deploy_config.ini'
     try:
@@ -174,7 +174,7 @@ def main():
         print(HELP_MESSAGE)
         sys.exit(2)
 
-    upload_files(ipa_local_path, output_dropbox_dir)
+    upload_ipa_and_plist_files(ipa_local_path, output_dropbox_dir)
 
 
 if __name__ == '__main__':
