@@ -2,6 +2,12 @@
 
 Script to upload & share AdHoc ipa file to Dropbox service.
 
+### Usage
+
+python main.py -i /path/to/ipa/file -o /path/to/dropbox/dir
+
+Dropbox dir may not exist. In this case it would be created automatically
+
 ### Requirments
 
 - OS X 10.11
