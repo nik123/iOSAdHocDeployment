@@ -1,13 +1,10 @@
 ## iOS deployment to Dropbox
 
 Script to upload & share AdHoc ipa file to Dropbox service.
-Optionally script may also send email with ipa links to other users
 
 ### Usage
 
-```
-python main.py -i /path/to/ipa/file -o /path/to/dropbox/dir -s mail-subject
-```
+python main.py -i /path/to/ipa/file -o /path/to/dropbox/dir
 
 Dropbox dir may not exist. In this case it would be created automatically
 
@@ -33,10 +30,4 @@ Create a new app and generate application access token. Then in project dir crea
 ```
 [Dropbox authorization]
 AppToken = put_your_app_token_here
-
-[Mail service]
-SmtpServer = your smtp-server. For example smtp.gmail.com
-Mailbox = your_mail_address
-Password = your_password
-ToWhom = emails_list_separated_by_comma
 ```
